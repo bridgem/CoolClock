@@ -109,6 +109,12 @@ clocks are sync'ed with the web server). If you specify a value (in hours)
 it will be used as an offset from GMT (UTC). Eg, put -5 to indicate 5 hours
 behind GMT. You can specify fractions of hours, eg +2.5.</td></tr>
 
+<tr><td>`_timezone`</td><td>Optional</td>
+
+<td>If you don't specify anything you get local time (or server time, if your
+clocks are sync'ed with the web server). If you specify a value (standard javascript naming such as Europe/London)
+it will be used to show time in that timezone.  *THIS SHOULD REPLACE _gmtOffset</td></tr>
+
 <tr><td>`_showDigital`</td><td>Optional</td>
 
 <td>If you define this tag then a digital clock will be rendered on top of the
@@ -168,11 +174,11 @@ is compatible with all browsers.)
 Authors
 -------
 
-CoolClock was originally created by Simon Baird <simon.baird@gmail.com>.
+CoolClock was originally created by Simon Baird.
 
-As for this fork's maintainer: I'm Pantelis Panayiotou <p.panayiotou@gmail.com>
-and I need to have this code functioning properly. So, please feel free to send
-me bug reports and suggestions.
+This version forked from Pantelis Panayiotou.
+
+Forked primarily to add timezone support which follows Daylight Saving Time changes.
 
 License
 -------
@@ -181,4 +187,3 @@ CoolClock is published under a BSD OpenSourceLicense that gives you the freedom
 to use it pretty much however you want, including for commercial purposes, as
 long as you keep my copyright notice. (You can see the full license text at the
 top of coolclock.js).
-
