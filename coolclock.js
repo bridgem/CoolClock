@@ -224,7 +224,7 @@ CoolClock.prototype = {
 
 		// BG color box behind text, but in front of hands 
 		this.ctx.fillStyle = textSkin.bgcolor;
-		this.ctx.fillRect(x - tSize.width / 2, y - tSize.height / 2, tSize.width, tSize.height);
+		// this.ctx.fillRect(x - tSize.width / 2, y - tSize.height / 2, tSize.width, tSize.height);
 
 		this.ctx.fillStyle = textSkin.color;		
 		this.ctx.fillText(theText, x - tSize.width / 2, y);

@@ -1,7 +1,9 @@
 CoolClock - An analogue clock for your website
 ==============================================
 
-This is my fork of CoolClock, a customisable JavaScript analogue clock.
+CoolClock is a customisable JavaScript analogue clock originally created by Simon Baird and enhanced by Pantelis Panayiotou.
+
+Forked primarily to add timezone support which follows Daylight Saving Time changes.
 
 ![World Clock](coolclock.png).
 
