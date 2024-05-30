@@ -6,17 +6,16 @@ This is my fork of CoolClock, a customisable JavaScript analogue clock.
 New Features
 ------------
 
+- **(12-May-2015)** - Replaced GMT offset with named timezone to cater for DST.
 - **(12-May-2015)** - Shadows can now be applied to digital clock text.
 - **(12-May-2015)** - New demo.html. Now renders clocks for all available skins.
 - **(12-May-2015)** - A few bug fixes.
-- **(18-Dec-2013)** - Clock parameters are now passed via canvas class
-  attributes.
+- **(18-Dec-2013)** - Clock parameters are now passed via canvas class attributes.
 - **(18-Dec-2013)** - Seconds hand can now have a "smooth" motion".
-- **(11-Dec-2013)** - Removed all cruft relating to Internet Explorer and
-  ExplorerCanvas. The clock works fine in IE 9.0 or later without them.
-- **(11-Dec-2013)** - The clock can now synchronize itself with the web
-  server's time. (Note that this is experimental. Testers are much
-  appreciated.)
+- **(11-Dec-2013)** - Removed all cruft relating to Internet Explorer and ExplorerCanvas. 
+  The clock works fine in IE 9.0 or later without them.
+- **(11-Dec-2013)** - The clock can now synchronize itself with the web server's time. 
+  (Note that this is experimental. Testers are much appreciated.)
 - **(11-Dec-2013)** - Clocks can now have a title, for instance "Local Time",
   or "London, UK".
 - **(11-Dec-2013)** - Proper skinning for titles and digital clocks.
@@ -102,18 +101,13 @@ miliUbuntu.</td></tr>
 that rotates continuously. It should be noted that "smooth" consumes a lot of
 CPU time.</td></tr>
 
-<tr><td>`_gmtOffset`</td><td>Optional</td>
-
-<td>If you don't specify anything you get local time (or server time, if your
-clocks are sync'ed with the web server). If you specify a value (in hours)
-it will be used as an offset from GMT (UTC). Eg, put -5 to indicate 5 hours
-behind GMT. You can specify fractions of hours, eg +2.5.</td></tr>
-
 <tr><td>`_timezone`</td><td>Optional</td>
 
-<td>If you don't specify anything you get local time (or server time, if your
+<td>Named timezone, used to provide time in another region and includes Daylight Saving Time.
+If you don't specify anything you get local time (or server time, if your
 clocks are sync'ed with the web server). If you specify a value (standard javascript naming such as Europe/London)
-it will be used to show time in that timezone.  *THIS SHOULD REPLACE _gmtOffset</td></tr>
+it will be used to show time in that timezone.  
+This replaces the previous gmtOffset parameter which did not compensate for DST.</td></tr>
 
 <tr><td>`_showDigital`</td><td>Optional</td>
 

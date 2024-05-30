@@ -73,17 +73,19 @@ CoolClock.config = {
 	// Digital clock and title skins
 	textSkins: {
 		std: {
-			font: "10px sans-serif",
-			color: "#222222",
-			shadowColor: "#eeeeee",
-			titleOffset: -0.6,
+			font: "16pt sans-serif",
+			color: "white",
+			bgcolor: "#00000060",
+			shadowColor: "#111",
+			titleOffset: -0.4,
 			digitalOffset: 0.6,
-			showSecs: true,
-			showAmPm: true
+			showSecs: false,
+			showAmPm: false
 		},
 		stdOnBlack: {
 			font: "10px sans-serif",
 			color: "#eeeeee",
+			bgcolor: "#0000050",
 			shadowColor: "#222222",
 			titleOffset: -0.6,
 			digitalOffset: 0.6,
@@ -93,6 +95,7 @@ CoolClock.config = {
 		miliUbuntu: {
 			font: "11px miliUbuntu",	// font class must be defined in a .css file
 			color: "#222222",
+			bgcolor: "#0000050",
 			shadowColor: "#eeeeee",
 			titleOffset: -0.6,
 			digitalOffset: 0.6,
@@ -123,22 +126,23 @@ CoolClock.prototype = {
 		this.displayRadius  = options.displayRadius ? parseInt(options.displayRadius) : CoolClock.config.defaultDisplayRadius;
 		this.renderRadius   = options.renderRadius ? parseInt(options.renderRadius) : CoolClock.config.defaultRenderRadius;
 		this.secondHand     = options.secondHand || CoolClock.config.defaultSecondHand;
-		this.gmtOffset      = options.gmtOffset ? parseFloat(options.gmtOffset) : null;
+		this.timezone       = options.timezone ? options.timezone : null;
+		this.showAmPm       = (options.showAmPm != null) || false;
 		this.showDigital    = (options.showDigital != null) || false;
 		this.clockTitle     = options.clockTitle || CoolClock.config.defaultClockTitle;
 		this.logClock       = options.logClock || CoolClock.config.defaultLogClock;
 
-		// Set a long or short tick delay, depending on the type of the second hand
-		if (this.secondHand == "smooth")
-		{
+		// Set a long or short tick delay, depending on the type of the second hand/digital skin
+		if (this.secondHand == "smooth") {
 			this.tickDelay = CoolClock.config.shortTickDelay;
 		}
-		else if (this.secondHand == "none")
-		{
+		else if (this.showDigital && this.getTextSkin(this.textSkinId).showSecs) {
+			this.tickDelay = CoolClock.config.tickDelay;
+		}
+		else if (this.secondHand == "none") {
 			this.tickDelay = CoolClock.config.longTickDelay;
 		}
-		else
-		{
+		else {
 			this.tickDelay = CoolClock.config.tickDelay;
 		}
 
@@ -199,20 +203,31 @@ CoolClock.prototype = {
 	drawTextAt: function(theText,x,y,textSkin) {
 		if (!textSkin) textSkin = this.getTextSkin();
 		this.ctx.save();
+		
 		this.ctx.font = textSkin.font;
-		this.ctx.fillStyle = textSkin.color;
 		if (textSkin.shadowColor)
 		{
 			this.ctx.shadowColor = textSkin.shadowColor;
-			this.ctx.shadowBlur = 1;
+			this.ctx.shadowOffsetX = 2;
+			this.ctx.shadowOffsetY = 2;
+			this.ctx.shadowBlur = 3;
 		}
 		var tSize = this.ctx.measureText(theText);
 		// TextMetrics rarely returns a height property: use baseline instead.
 		if (!tSize.height) {
-			tSize.height = 0;
+			// BG Rectangle for visibility font (incl. ascenders, descenders) or actual (minimal)
+			// actual has been supported for longer than font
+			tSize.height = tSize.fontBoundingBoxAscent + tSize.fontBoundingBoxDescent;
+			// tSize.height = tSize.actualBoundingBoxAscent + tSize.actualBoundingBoxDescent;
 			this.ctx.textBaseline = 'middle';
 		}
-		this.ctx.fillText(theText, x - tSize.width/2, y - tSize.height/2);
+
+		// BG color box behind text, but in front of hands 
+		this.ctx.fillStyle = textSkin.bgcolor;
+		this.ctx.fillRect(x - tSize.width / 2, y - tSize.height / 2, tSize.width, tSize.height);
+
+		this.ctx.fillStyle = textSkin.color;		
+		this.ctx.fillText(theText, x - tSize.width / 2, y);
 		this.ctx.restore();
 	},
 
@@ -242,11 +257,10 @@ CoolClock.prototype = {
 	timeText: function(hour,min,sec) {
 		var s =this.getTextSkin(this.textSkinId);
 		return '' +
-			(s.showAmPm ? ((hour%12)==0 ? 12 : (hour%12)) : hour) + ':' +
+			(s.showAmPm ? ((hour%12)==0 ? 12 : (hour%12)) : this.lpad2(hour)) + ':' +
 			this.lpad2(min) +
 			(s.showSecs ? ':' + this.lpad2(sec) : '') +
-			(s.showAmPm ? (hour < 12 ? ' am' : ' pm') : '')
-			;
+			(s.showAmPm ? (hour < 12 ? ' am' : ' pm') : '');
 	},
 
 	// Draw a radial line by rotating then drawing a straight line
@@ -333,6 +347,13 @@ CoolClock.prototype = {
 				       );
 		}
 
+		if (this.showAmPm) {
+			if (hour < 12)
+				this.drawTextAt("AM", 15, this.renderRadius*2 -5, skin.ampm);
+			else
+				this.drawTextAt("PM", this.renderRadius*2 -15, this.renderRadius*2 -5, skin.ampm);
+		}
+
 		if (this.extraRender) {
 			this.extraRender(hour,min,sec);
 		}
@@ -348,22 +369,24 @@ CoolClock.prototype = {
 		}
 		now = new Date(now);
 
-		if (this.gmtOffset != null) {
-			// Use GMT + gmtOffset
-			var offsetNow = new Date(now.valueOf() + (this.gmtOffset * 1000 * 60 * 60));
-			this.render(offsetNow.getUTCHours(),
-				    offsetNow.getUTCMinutes(),
-				    offsetNow.getUTCSeconds(),
-				    this.tickDelay < 1000 ? offsetNow.getUTCMilliseconds() : 0
-				);
-		}
-		else {
-			// Use local time
-			this.render(now.getHours(),
-				    now.getMinutes(),
-				    now.getSeconds(),
-				    this.tickDelay < 1000 ? now.getMilliseconds() : 0
-				);
+		// Timezone support
+		if (this.timezone != null) {
+			// If timezone is set then ignore gmt offset
+
+			const options = { timeZone: this.timezone, hour12: false, hour: 'numeric', minute: 'numeric', second : 'numeric' };
+			const timeString = now.toLocaleTimeString('en-GB', options);
+			const hour = parseInt(timeString.split(':')[0]);
+			var min = parseInt(timeString.split(':')[1]);
+			var sec = parseInt(timeString.split(':')[2]);
+
+			this.render(hour, min, sec, this.tickDelay < 1000 ? offsetNow.getMilliseconds() : 0)
+		} else {
+				// Use local time
+				this.render(now.getHours(),
+						now.getMinutes(),
+						now.getSeconds(),
+						this.tickDelay < 1000 ? now.getMilliseconds() : 0
+					);
 		}
 	},
 
@@ -495,7 +518,8 @@ CoolClock.findAndCreateClocks = function() {
 			    displayRadius:  this.elAttr(canvas, "_displayradius"),
 			    renderRadius:   this.elAttr(canvas, "_renderradius"),
 			    secondHand:     this.elAttr(canvas, "_secondhand"),
-			    gmtOffset:      this.elAttr(canvas, "_gmtoffset"),
+			    timezone:       this.elAttr(canvas, "_timezone"),
+			    showAmPm:       this.elAttr(canvas, "_showampm"),
 			    showDigital:    this.elAttr(canvas, "_showdigital"),
 			    clockTitle:     this.elAttr(canvas, "_clocktitle"),
 			    logClock:       this.elAttr(canvas, "_logclock")

@@ -1,0 +1,284 @@
+﻿<!DOCTYPE HTML
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>CoolClock</title>
+	<script src="coolclock.js" type="text/javascript"></script>
+	<script src="moreskins.js" type="text/javascript"></script>
+	<script src="digitalclock.js" type="text/javascript"></script>
+
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@800&display=swap');
+		@import url('https://fonts.googleapis.com/css?family=Orbitron');
+		@import url('https://fonts.googleapis.com/css?family=Russo+One');
+		@import url('https://fonts.googleapis.com/css?family=Play');
+		@import url('https://fonts.googleapis.com/css?family=Audiowide');
+		@import url('https://fonts.googleapis.com/css?family=Michroma');
+		@import url('https://fonts.googleapis.com/css?family=Monomaniac+One');
+		@import url('https://fonts.googleapis.com/css?family=Cutive');
+		body {
+			margin: 0pt;
+			padding: 1em;
+			color: white;
+			background-color: black;
+			font-family: _Cutive, "_Monomaniac One", "_Michroma", _Audiowide, "_Play", "Russo One", Orbitron, "Arial Black", helvetica, serif;
+		}
+
+		canvas {
+			display: inline;
+			margin: auto;
+		}
+
+		#page {
+			display: flex;
+			flex-direction: column;
+			margin: 0px 10% 0px 10%;
+		}
+
+		#top {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+		}
+
+		#clockface {
+			margin-left: 35px;
+		}
+
+		#calendar {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			grid-template-areas:
+				"a a"
+				"b b"
+				"c d";
+			font-size: 84pt;
+			text-align: center;
+			line-height: 80%;
+			margin-right: 35px;
+		}
+
+		#worldclocks {
+			display: flex;
+			justify-content: space-evenly;
+			margin-top: 50px;
+		}
+
+		.smallclock {
+			text-align: center;
+			font-family: "JetBrains mono", orbitron, arial, helvetica;
+			font-size: 16pt;
+			font-weight: bold;
+		}
+
+		.smallclocktitle {
+			margin-top: 20px;
+			margin-left: auto;
+			margin-right: auto;
+			text-align: center;
+			width: 130px;
+			height: 60px;
+		}
+
+		.tz_offset {
+			margin-top: 20px;
+		}
+
+		#dayname { grid-area: a; }
+		#month { grid-area: c; }
+		#year { grid-area: d; }
+		#day { grid-area: b; }
+		
+		#daynum { 
+			font-size: 150pt; 
+			flex: 1;
+			padding-top: 0.2em; 
+			padding-bottom: 0.2em;
+		}
+		#suffix { font-size: 80pt;
+			flex: 1; 
+			text-align: left;
+			font-size: 0.7em;
+			margin-left: 0.2em;
+		}
+
+		#header {
+			margin-bottom: 25px;
+		}
+
+		#footer {
+			margin-top: 40px;
+		}
+	
+		#dtstringfull,
+		#dtstring {
+			background-color: black;
+			color: #444;
+			font-family: 'Share Tech Mono', 'Courier New';
+			font-size: 16pt;
+			float: left;
+		}
+		#dtstringfull:hover {
+			color: #13da1a;
+			font-weight: bold;
+		}
+
+		#dtstring {
+			float: right;
+		}
+
+		#timestring {
+			color: white;
+			font-family: "JetBrains mono", Orbitron, "Arial Black", helvetica, serif;
+			font-size: 18pt;
+			margin-top: 30px;
+			font-weight: bold;
+			text-align: center;
+		}
+	</style>
+	<script>
+		function addClockList() {
+			var oracle = [
+				{ title: "Redwood Shores", timezone: "US/Pacific" },
+				{ title: "Austin", timezone: "US/Central" },
+				{ title: "UTC", timezone: "Etc/UTC" },
+				{ title: "CET", timezone: "Europe/Paris" },
+				{ title: "Bucharest", timezone: "Europe/Bucharest" },
+				{ title: "Bangalore", timezone: "Asia/Kolkata" }
+			]
+
+			var labs = [
+				{ title: "Lawrence Berkeley", timezone: "US/Pacific" },
+				{ title: "Fermilab", timezone: "US/Central" },
+				{ title: "NASA", timezone: "US/Eastern" },
+				{ title: "UTC", timezone: "Etc/UTC" },
+				{ title: "CERN", timezone: "Europe/Paris" },
+				{ title: "Honeysuckle Creek", timezone: "Australia/Canberra"}
+			]
+
+			var observatories = [
+				{ title: "Mauna Kea", timezone: "US/Hawaii" },
+				{ title: "Kitt Peak", timezone: "US/Mountain" },
+				{ title: "ELT Chile", timezone: "Chile/Continental" },
+				{ title: "UTC", timezone: "Etc/UTC" },
+				{ title: "Karoo", timezone: "Africa/Johannesburg" },
+				{ title: "FAST China", timezone: "Asia/Shanghai"}
+			]
+
+			var test = [
+				{ title: "NYC", timezone: "US/Eastern" },
+				{ title: "Newfoundland", timezone: "America/St_Johns" },
+				{ title: "Paris", timezone: "Europe/Paris" },
+				{ title: "India", timezone: "Asia/Kolkata" }
+			]
+
+			var clocklist = oracle;
+
+			var d = document.getElementById('worldclocks');
+			var clock_id = 100;
+
+			for (var c in clocklist) {
+				var content = "";
+				// Split multi-word titles into separate lines
+				title = clocklist[c].title;
+
+				tz_str = clocklist[c].timezone ? `_timezone="${clocklist[c].timezone}"` : "";
+
+				var timezone = "";
+				var tz_str = "";
+				var offset_signed = "";
+				
+				if (clocklist[c].hasOwnProperty("timezone")) {
+					timezone = clocklist[c].timezone;
+					tz_str = `_timezone="${timezone}"`
+
+					//  Calculate offset from this computer time
+					now = new Date();
+					h = now.getHours();
+					m = now.getMinutes();
+
+					const options = { timeZone: timezone, hour12: false, hour: 'numeric', minute: 'numeric'};
+					const tz_time = now.toLocaleTimeString('en-GB', options);
+					const tz_hr = parseInt(tz_time.split(':')[0]);
+					const tz_mn = parseInt(tz_time.split(':')[1]);
+					
+					offset = tz_hr - h;
+					mins_offset = "";
+
+					// Some timezones have fractions of an hour, e.g. India = GMT +4.30
+					if (m != tz_mn) {
+						mins_offset = "." + Math.abs(tz_mn - m);
+						if (offset < 0)
+							offset = offset + 1
+					}
+
+					// Add the plus sign if the offset is not negative
+					offset_signed = (offset<0?"":"+") + offset + mins_offset;
+				}
+				
+				content += '<div class="smallclock">';
+				content += `	<canvas id="c${clock_id}" `;
+				content += `            class="CoolClock" `;
+				content += `            _clockTitle="${title}"`;
+				content += `             _skinId="chunkySwissMBsaturn"`;
+				content += `             _displayRadius="80" `;
+				content += `            _secondHand="none" `;
+				content += `            _showdigital="true" `;
+				// content += `            _showampm="" `;
+				content += `            ${tz_str}">`;
+				content += `    </canvas>`;
+				// content += '	<div class="smallclocktitle">';	
+				// content += `        ${title}`;
+				// content += `    </div>`;
+				content += `    <div class="tz_offset">${offset_signed}</div>`;
+				content += '</div>';
+				d.innerHTML+= content;
+				clock_id++;
+			} 
+		}
+
+		function loadMyClocks() {
+			addClockList();
+			CoolClock.findAndCreateClocks();
+			mbDigitalClock();
+		}
+	</script>
+</head>
+
+<body onload="loadMyClocks();">
+	<div id="header">
+		<span id="dtstringfull"></span>
+		<span id="dtstring"></span>
+		<br />
+	</div>
+
+	<div id="page">
+		<div id="top">
+			<!-- Main (Large) Clock, shows current local time -->
+			<div id="clockface">
+				<canvas id="c1" style="display:block;" class="CoolClock" 
+				_skinId="chunkySwissMB" _displayRadius="200" 
+				_secondHand="smooth"></canvas>
+			</div>
+
+			<!-- Digital Calendar -->
+			<div id="calendar">
+				<div id="year"></div>
+				<div id="dayname"></div>
+				<div id="day">
+					<div id="daynum"></div>
+					<!-- <div id="suffix"></div> -->
+				</div>
+				<div id="month"></div>
+			</div>
+		</div>
+		<!-- List of worldclocks generated above -->
+		<div id="worldclocks"></div> 
+	</div>
+	<div id="footer">
+		<div id="timestring"></div>
+	</div>
+</body>
+</html>
