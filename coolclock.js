@@ -74,8 +74,8 @@ CoolClock.config = {
 	textSkins: {
 		std: {
 			font: "16pt sans-serif",
-			color: "white",
-			bgcolor: "#00000060",
+			color: "#33FF33",
+			bgcolor: "#000000a0",
 			shadowColor: "#111",
 			titleOffset: -0.4,
 			digitalOffset: 0.6,
@@ -217,14 +217,14 @@ CoolClock.prototype = {
 		if (!tSize.height) {
 			// BG Rectangle for visibility font (incl. ascenders, descenders) or actual (minimal)
 			// actual has been supported for longer than font
-			tSize.height = tSize.fontBoundingBoxAscent + tSize.fontBoundingBoxDescent;
-			// tSize.height = tSize.actualBoundingBoxAscent + tSize.actualBoundingBoxDescent;
+			// tSize.height = tSize.fontBoundingBoxAscent + tSize.fontBoundingBoxDescent;
+			tSize.height = tSize.actualBoundingBoxAscent + tSize.actualBoundingBoxDescent;
 			this.ctx.textBaseline = 'middle';
 		}
 
 		// BG color box behind text, but in front of hands 
 		this.ctx.fillStyle = textSkin.bgcolor;
-		// this.ctx.fillRect(x - tSize.width / 2, y - tSize.height / 2, tSize.width, tSize.height);
+		this.ctx.fillRect(x - tSize.width / 2, y - tSize.height / 2, tSize.width, tSize.height);
 
 		this.ctx.fillStyle = textSkin.color;		
 		this.ctx.fillText(theText, x - tSize.width / 2, y);
