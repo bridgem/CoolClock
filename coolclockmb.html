@@ -168,13 +168,11 @@
 			]
 
 			var test = [
-				{ title: "NYC", timezone: "US/Eastern" },
-				{ title: "Newfoundland", timezone: "America/St_Johns" },
-				{ title: "Paris", timezone: "Europe/Paris" },
-				{ title: "India", timezone: "Asia/Kolkata" }
+				{ title: "Honeysuckle Creek", timezone: "Australia/Canberra"},
+				{ title: "Alaska (-9/-8)", timezone: "US/Alaska"}
 			]
 
-			var clocklist = oracle;
+			var clocklist = labs;
 
 			var d = document.getElementById('worldclocks');
 			var clock_id = 100;
@@ -195,7 +193,8 @@
 					tz_str = `_timezone="${timezone}"`
 
 					//  Calculate offset from this computer time
-					now = new Date();
+					// now = new Date();
+					now = new Date(2024, 5, 30, 2, 10);
 					h = now.getHours();
 					m = now.getMinutes();
 
@@ -205,6 +204,13 @@
 					const tz_mn = parseInt(tz_time.split(':')[1]);
 					
 					offset = tz_hr - h;
+					// hours spanning midnight
+					if (offset <-12)
+						offset = (24 + tz_hr - h) % 24; 
+					else if (offset > 12)
+						offset = -(24 + h - tz_hr) % 24; 
+
+
 					mins_offset = "";
 
 					// Some timezones have fractions of an hour, e.g. India = GMT +4.30

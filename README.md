@@ -3,10 +3,13 @@ CoolClock - An analogue clock for your website
 
 This is my fork of CoolClock, a customisable JavaScript analogue clock.
 
+![World Clock](coolclock.png).
+
 New Features
 ------------
 
-- **(12-May-2015)** - Replaced GMT offset with named timezone to cater for DST.
+- **(30-May-2024)** - Added named timezone parameter to properly support time differences and cater for DST.
+- **(30-May-2024)** - Completely removed _gmtOffset as results were problematic.
 - **(12-May-2015)** - Shadows can now be applied to digital clock text.
 - **(12-May-2015)** - New demo.html. Now renders clocks for all available skins.
 - **(12-May-2015)** - A few bug fixes.
