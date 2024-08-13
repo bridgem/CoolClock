@@ -172,7 +172,7 @@
 				{ title: "Alaska (-9/-8)", timezone: "US/Alaska"}
 			]
 
-			var clocklist = labs;
+			var clocklist = observatories;
 
 			var d = document.getElementById('worldclocks');
 			var clock_id = 100;
@@ -228,16 +228,19 @@
 				content += `	<canvas id="c${clock_id}" `;
 				content += `            class="CoolClock" `;
 				content += `            _clockTitle="${title}"`;
-				content += `             _skinId="chunkySwissMBsaturn"`;
+				content += `             _skinId="chunkySwissMBsmall"`;
 				content += `             _displayRadius="80" `;
 				content += `            _secondHand="none" `;
 				content += `            _showdigital="true" `;
-				// content += `            _showampm="" `;
 				content += `            ${tz_str}">`;
+				// content += `            _showampm="" `;
 				content += `    </canvas>`;
+
+				// Can output clock titles in HTML rather than on the clock canvas
 				// content += '	<div class="smallclocktitle">';	
 				// content += `        ${title}`;
 				// content += `    </div>`;
+				
 				content += `    <div class="tz_offset">${offset_signed}</div>`;
 				content += '</div>';
 				d.innerHTML+= content;

@@ -220,53 +220,40 @@ CoolClock.config.skins = {
 		secondDecoration: { lineWidth: 1, startAt: 70, radius: 3, fillColor: "red", color: "black", alpha: .7 }
 	}
 		,
-		// By mbridge
-	// Original running on saturn
-	chunkySwissMBsaturn: {
-		outerBorder: { lineWidth: 4, radius:97, color: "white", alpha: 1 },
-		smallIndicator: { lineWidth: 2, startAt: 86, endAt: 93, color: "white", alpha: 1 },
-		largeIndicator: { lineWidth: 8, startAt: 80, endAt: 93, color: "white", alpha: 1 },
-		hourHand: { lineWidth: 12, startAt: -15, endAt: 60, color: "white", alpha: 1 },
-		minuteHand: { lineWidth: 10, startAt: -15, endAt: 85, color: "white", alpha: 1 },
-		secondHand: { lineWidth: 4, startAt: -20, endAt: 72, color: "red", alpha: 1 },
-		secondDecoration: { lineWidth: 2, startAt: 70, radius: 8, fillColor: "red", color: "red", alpha: 1 },
-		ampm: { color: "white", font: "bold 14pt 'b612 mono', sans-serif", alpha: 1 } ,
-		digits: { lineWidth: 2, color: "#888888", font: "bold 16pt 'JetBrains mono', sans-serif", alpha: 1 }
-	},
-	
-	// Measurements from wikimedia image of real clock
+	// By mbridge
+	// Measurements from wikimedia image of real swiss clock
 	chunkySwissMB: {
-		outerBorder: { lineWidth: 4, radius:97, color: "#aaa", alpha: 1 },
-		smallIndicator: { lineWidth: 3, startAt: 80, endAt: 90, color: "white", alpha: 1 },
-		largeIndicator: { lineWidth: 6, startAt: 68, endAt: 90, color: "white", alpha: 1 },
-		hourHand: { lineWidth: 10, startAt: -15, endAt: 60, color: "white", alpha: 1 },
-		minuteHand: { lineWidth: 8, startAt: -15, endAt: 84, color: "white", alpha: 1 },
-		secondHand: { lineWidth: 4, startAt: -20, endAt: 60, color: "red", alpha: 1 },
+		outerBorder:      { lineWidth: 4, radius:97, color: "#aaa", alpha: 1 },
+		smallIndicator:   { lineWidth: 3, startAt: 80, endAt: 90, color: "white", alpha: 1 },
+		largeIndicator:   { lineWidth: 6, startAt: 68, endAt: 90, color: "white", alpha: 1 },
+		hourHand:         { lineWidth: 10, startAt: -15, endAt: 60, color: "white", alpha: 1 },
+		minuteHand:       { lineWidth: 8, startAt: -15, endAt: 84, color: "white", alpha: 1 },
+		secondHand:       { lineWidth: 4, startAt: -20, endAt: 60, color: "red", alpha: 1 },
 		secondDecoration: { lineWidth: 2, startAt: 58, radius: 8, fillColor: "red", color: "red", alpha: 1 },
-		ampm: { color: "red", font: "bold 14pt 'b612 mono', sans-serif", alpha: 1 } ,
-		digits: { lineWidth: 2, color: "#888888", font: "bold 16pt 'JetBrains mono', sans-serif", alpha: 1 }
+		ampm:             { color: "red", font: "bold 14pt 'b612 mono', sans-serif", alpha: 1 } ,
+		digits:           { lineWidth: 2, color: "#888888", font: "bold 16pt 'JetBrains mono', sans-serif", alpha: 1 }
 	},
 
-	chunkySwissOnBlack: {
-		outerBorder: { lineWidth: 4, radius:97, color: "#ffffff", alpha: 1 },
-		smallIndicator: { lineWidth: 4, startAt: 89, endAt: 93, color: "#ffffff", alpha: 1 },
-		largeIndicator: { lineWidth: 8, startAt: 80, endAt: 93, color: "#ffffff", alpha: 1 },
-		hourHand: { lineWidth: 12, startAt: -15, endAt: 60, color: "#ffffff", alpha: 1 },
-		minuteHand: { lineWidth: 10, startAt: -15, endAt: 85, color: "#ffffff", alpha: 1 },
-		secondHand: { lineWidth: 4, startAt: -20, endAt: 85, color: "#ff5555", alpha: 1 },
-		secondDecoration: { lineWidth: 2, startAt: 70, radius: 8, fillColor: "#ff5555", color: "#ff5555", alpha: 1 },
-		ampm: { color: "red", font: "bold 14pt 'b612 mono', sans-serif", alpha: 1 } ,
-	},
-	
+	// Looks a little better on smaller clocks
+	chunkySwissMBsmall: {
+        outerBorder: { lineWidth: 4, radius:97, color: "white", alpha: 1 },
+        smallIndicator: { lineWidth: 2, startAt: 86, endAt: 93, color: "white", alpha: 1 },
+        largeIndicator: { lineWidth: 8, startAt: 80, endAt: 93, color: "white", alpha: 1 },
+        hourHand: { lineWidth: 12, startAt: -15, endAt: 60, color: "white", alpha: 1 },
+        minuteHand: { lineWidth: 10, startAt: -15, endAt: 85, color: "white", alpha: 1 },
+        secondHand: { lineWidth: 4, startAt: -20, endAt: 72, color: "red", alpha: 1 },
+        secondDecoration: { lineWidth: 2, startAt: 70, radius: 8, fillColor: "red", color: "red", alpha: 1 },
+        ampm: { color: "white", font: "bold 14pt 'b612 mono', sans-serif", alpha: 1 } ,
+        digits: { lineWidth: 2, color: "#888888", font: "bold 16pt 'JetBrains mono', sans-serif", alpha: 1 }
+    },
+
+	// Karlsson makes a popular flipclock with analog clockface
 	karlsson: {
-		outerBorder: { lineWidth: 4, radius:97, color: "#000", alpha: 0.7 },
-		// smallIndicator: { lineWidth: 3, startAt: 80, endAt: 90, color: "white", alpha: 1 },
-		largeIndicator: { lineWidth: 6, startAt: 64, endAt: 93, color: "white", alpha: 1 },
-		hourHand: { lineWidth: 10, startAt: -15, endAt: 60, color: "white", alpha: 1 },
-		minuteHand: { lineWidth: 8, startAt: -15, endAt: 84, color: "white", alpha: 1 },
-		secondHand: { lineWidth: 2, startAt: -20, endAt: 66, color: "red", alpha: 1 },
-		// secondDecoration: { lineWidth: 2, startAt: 58, radius: 8, fillColor: "red", color: "red", alpha: 1 },
+		outerBorder:      { lineWidth: 4, radius:97, color: "#000", alpha: 0.7 },
+		largeIndicator:   { lineWidth: 6, startAt: 64, endAt: 93, color: "white", alpha: 1 },
+		hourHand:         { lineWidth: 10, startAt: -15, endAt: 60, color: "white", alpha: 1 },
+		minuteHand:       { lineWidth: 8, startAt: -15, endAt: 84, color: "white", alpha: 1 },
+		secondHand:       { lineWidth: 2, startAt: -20, endAt: 90, color: "red", alpha: 1 },
 	},
-
 	
 };
