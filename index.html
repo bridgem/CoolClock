@@ -1,5 +1,4 @@
-﻿<!DOCTYPE HTML
-	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<!DOCTYPE HTML>
 <html>
 
 <head>
@@ -118,7 +117,6 @@
 			color: #444;
 			font-family: 'Share Tech Mono', 'Courier New';
 			font-size: 16pt;
-			float: left;
 		}
 		#dtstringfull:hover {
 			color: #13da1a;
@@ -127,6 +125,29 @@
 
 		#dtstring {
 			float: right;
+		}
+
+		#loc_selector {
+			float: right;
+			font-size: 12pt;
+			background-color: black;
+			color: #666;
+			
+			font-family: 'Share Tech Mono', 'Courier New';
+			font-weight: normal;
+			font-size: 14pt;
+		}
+
+		/* Locations drop down */
+		#locations {
+			appearance: none;
+			/* Remove default arrow */
+			background-image: url(...);
+			border: none;
+			background-color: black;
+			color: #666;
+			font-family: 'Share Tech Mono', 'Courier New';
+			font-size: 14pt;
 		}
 
 		#timestring {
@@ -139,40 +160,100 @@
 		}
 	</style>
 	<script>
-		function addClockList() {
-			var oracle = [
-				{ title: "Redwood Shores", timezone: "US/Pacific" },
-				{ title: "Austin", timezone: "US/Central" },
-				{ title: "UTC", timezone: "Etc/UTC" },
-				{ title: "CET", timezone: "Europe/Paris" },
-				{ title: "Bucharest", timezone: "Europe/Bucharest" },
-				{ title: "Bangalore", timezone: "Asia/Kolkata" }
-			]
+		const DEFAULT_LOCATION_LIST_NAME = 'labs';
 
-			var labs = [
-				{ title: "Lawrence Berkeley", timezone: "US/Pacific" },
-				{ title: "Fermilab", timezone: "US/Central" },
-				{ title: "NASA", timezone: "US/Eastern" },
-				{ title: "UTC", timezone: "Etc/UTC" },
-				{ title: "CERN", timezone: "Europe/Paris" },
-				{ title: "Honeysuckle Creek", timezone: "Australia/Canberra"}
-			]
+		var cities = [
+			{ title: "Redwood Shores", timezone: "US/Pacific" },
+			{ title: "Austin", timezone: "US/Central" },
+			{ title: "UTC", timezone: "Etc/UTC" },
+			{ title: "CET", timezone: "Europe/Paris" },
+			{ title: "Bucharest", timezone: "Europe/Bucharest" },
+			{ title: "Bangalore", timezone: "Asia/Kolkata" }
+		]
 
-			var observatories = [
-				{ title: "Mauna Kea", timezone: "US/Hawaii" },
-				{ title: "Kitt Peak", timezone: "US/Mountain" },
-				{ title: "ELT Chile", timezone: "Chile/Continental" },
-				{ title: "UTC", timezone: "Etc/UTC" },
-				{ title: "Karoo", timezone: "Africa/Johannesburg" },
-				{ title: "FAST China", timezone: "Asia/Shanghai"}
-			]
+		var labs = [
+			{ title: "Lawrence Berkeley", timezone: "US/Pacific" },
+			{ title: "Fermilab", timezone: "US/Central" },
+			{ title: "NASA", timezone: "US/Eastern" },
+			{ title: "UTC", timezone: "Etc/UTC" },
+			{ title: "CERN", timezone: "Europe/Paris" },
+			{ title: "Honeysuckle Creek", timezone: "Australia/Canberra"}
+		]
 
-			var test = [
-				{ title: "Honeysuckle Creek", timezone: "Australia/Canberra"},
-				{ title: "Alaska (-9/-8)", timezone: "US/Alaska"}
-			]
+		var observatories = [
+			{ title: "Mauna Kea", timezone: "US/Hawaii" },
+			{ title: "Kitt Peak", timezone: "US/Mountain" },
+			{ title: "ELT Chile", timezone: "Chile/Continental" },
+			{ title: "UTC", timezone: "Etc/UTC" },
+			{ title: "Karoo", timezone: "Africa/Johannesburg" },
+			{ title: "FAST China", timezone: "Asia/Shanghai"}
+		]
 
-			var clocklist = observatories;
+		var national_parks = [
+			{ title: "Crater Lake", timezone: "US/Pacific" },
+			{ title: "Zion", timezone: "US/Mountain" },
+			{ title: "Shenandoa", timezone: "US/Eastern" },
+			{ title: "UTC", timezone: "Etc/UTC" },
+			{ title: "South Downs", timezone: "Europe/London" },
+			{ title: "Vanoise", timezone: "Europe/Paris" },
+			{ title: "Blue Mountains", timezone: "Australia/Sydney"}
+		]
+
+		var test = [
+			{ title: "Honeysuckle Creek", timezone: "Australia/Canberra"},
+			{ title: "Alaska (-9/-8)", timezone: "US/Alaska"}
+		]
+
+		var location_list = [
+			{ name: "cities", list: cities},
+			{ name: "labs", list: labs},
+			{ name: "observatories", list: observatories},
+			{ name: "national_parks", list: national_parks},
+			{ name: "test", list: test},
+		]
+
+		var clocklist;
+
+		function refreshWithVariable() {
+            // Define the variable to pass
+            const location_list_name = document.getElementById("locations").value;
+
+            // Get the current URL
+            const currentUrl = window.location.href.split('?')[0]; // Remove any existing query parameters
+
+            // Append the variable as a query parameter
+            const newUrl = `${currentUrl}?variable=${encodeURIComponent(location_list_name)}`;
+
+            // Refresh the page with the new URL
+            window.location.href = newUrl;
+        }
+
+		function receive_params() {
+            const urlParams = new URLSearchParams(window.location.search);
+            location_list_name = urlParams.get('variable');
+
+            if (!location_list_name) {
+				location_list_name = DEFAULT_LOCATION_LIST_NAME;
+			}
+			// Set the dropdown selector to the received value
+			const selectElement = document.getElementById('locations');
+
+			// Set the selected value
+			selectElement.value = location_list_name;
+
+			loadMyClocks(location_list_name);
+        };
+
+
+		function addClockList(listname) {
+			console.log('clocklist, loooking for ' + listname);
+
+			location_list.forEach(location => {
+				console.log(`Category: ${location.name}`);
+				console.log(`Items: ${location.list.join(", ")}`);
+			});
+
+			clocklist = location_list.find(item => item.name === listname)['list'];
 
 			var d = document.getElementById('worldclocks');
 			var clock_id = 100;
@@ -183,6 +264,8 @@
 				title = clocklist[c].title;
 
 				tz_str = clocklist[c].timezone ? `_timezone="${clocklist[c].timezone}"` : "";
+
+				console.log(`Clock: ${title}, tz=${tz_str}`);
 
 				var timezone = "";
 				var tz_str = "";
@@ -248,19 +331,31 @@
 			} 
 		}
 
-		function loadMyClocks() {
-			addClockList();
+		function loadMyClocks(listname) {
+			addClockList(listname);
 			CoolClock.findAndCreateClocks();
 			mbDigitalClock();
 		}
 	</script>
 </head>
 
-<body onload="loadMyClocks();">
+<!-- <body onload="loadMyClocks();"> -->
+<body onload="receive_params();">
+
 	<div id="header">
 		<span id="dtstringfull"></span>
 		<span id="dtstring"></span>
 		<br />
+		<div id="loc_selector">
+			<span>Select:</span>
+			<select id="locations" onchange="refreshWithVariable()">
+				<option value="cities">Cities</option>
+				<option value="labs">Science Labs</option>
+				<option value="observatories">Observatories</option>
+				<option value="national_parks">National Parks</option>
+				<option value="test">test</option>
+			</select>
+		</div>
 	</div>
 
 	<div id="page">
@@ -289,5 +384,6 @@
 	<div id="footer">
 		<div id="timestring"></div>
 	</div>
+
 </body>
 </html>
