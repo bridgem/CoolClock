@@ -1,4 +1,4 @@
-﻿<!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html>
 
 <head>
@@ -198,6 +198,18 @@
 			{ title: "Vanoise", timezone: "Europe/Paris" },
 			{ title: "Blue Mountains", timezone: "Australia/Sydney"}
 		]
+		
+		var summer_olympics = [
+			{ title: "Atlanta 1996", timezone: "US/Eastern" },
+			{ title: "Rio 2016", timezone: "Brazil/East" },
+			{ title: "UTC", timezone: "Etc/UTC" },
+			{ title: "London 2012", timezone: "Europe/London" },
+			{ title: "Paris 2024", timezone: "Europe/Paris" },
+			{ title: "Athens 2004", timezone: "Europe/Athens" },
+			{ title: "Beijing 2008", timezone: "Asia/Shanghai" },
+			{ title: "Tokyo 2020", timezone: "Asia/Tokyo" },
+			{ title: "Sydney 2000", timezone: "Australia/Sydney" },
+		]
 
 		var test = [
 			{ title: "Honeysuckle Creek", timezone: "Australia/Canberra"},
@@ -209,6 +221,7 @@
 			{ name: "labs", list: labs},
 			{ name: "observatories", list: observatories},
 			{ name: "national_parks", list: national_parks},
+			{ name: "summer_olympics", list: summer_olympics},
 			{ name: "test", list: test},
 		]
 
@@ -347,12 +360,14 @@
 		<span id="dtstring"></span>
 		<br />
 		<div id="loc_selector">
+			<!--TODO: Build from json element -->
 			<span>Select:</span>
 			<select id="locations" onchange="refreshWithVariable()">
 				<option value="cities">Cities</option>
 				<option value="labs">Science Labs</option>
 				<option value="observatories">Observatories</option>
 				<option value="national_parks">National Parks</option>
+				<option value="summer_olympics">Summer Olympics</option>
 				<option value="test">test</option>
 			</select>
 		</div>
